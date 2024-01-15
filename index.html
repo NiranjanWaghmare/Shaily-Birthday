@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ephesis&family=Public+Sans:wght@500&family=Yellowtail&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Happy Birthday</title>
+  </head>
+  <body class="background">
+    <!-- <audio id="myAudio" class="audio" controls loop>
+      <source src="./neonlight_highpitch-7058.mp3" type="audio/mp3">
+    </audio> -->
+    <canvas id="confetti"> </canvas>
+
+    <div class="container" id="main-banner" style="opacity: 0">
+      <div class="neon">Happy Birthday</div>
+      <br />
+      <div class="flux">Shaily</div>
+      <br />
+      <div class="greet">Thanks for continuing the tradition of being older than me.</div>
+      <!-- <canvas id="confetti"></canvas> -->
+    </div>
+
+    <div id="balloon-container"></div>
+    <div class="wishes" onclick="confetti.start(2000,100)">
+      <div class="cannopy" >
+        <!-- <div class="lightl1"><img src="./assets/lights.png" alt=""></div>
+        <div class="lightl2"><img src="./assets/lights.png" alt=""></div>
+         <div class="lightl3"><img src="./assets/lights.png" alt=""></div> 
+        <div class="lightr1"><img src="./assets/lights.png" alt=""></div> 
+        <div class="lightr2"><img src="./assets/lights.png" alt=""></div>  -->
+      </div>
+
+      <div class="canopy-message">Wish you a Very Happy Birthday</div>
+      
+    </div>
+
+
+    <div class="birthday-cake">
+      <div id="birthday-cake">
+        <div class="make-wish"> Make a wish </div>
+        <div class="make-wish2"> Your Wish will be fulfilled </div>
+        <div class="cake">
+         
+          <div class="middle"></div>
+          <div class="chocs"></div>
+          <div class="top"></div>
+        </div>
+        <div class="candles">
+          <div class="flame"></div>
+          <div class="flame2"></div>
+          <div class="flame3"></div>
+          <div class="text">Happy Birthday!</div>
+          <div class="shadows"></div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script type="text/javascript">
+
+
+      function showConfetti(){
+          document.getElementById('confetti').style.display="block";
+          hideConfetti();
+          console.log(hideConfetti())
+          
+      }
+      
+      
+          // global variables
+      const confetti = document.getElementById('confetti');
+      const confettiCtx = confetti.getContext('2d');
+      let container, confettiElements = [], clickPosition;
+      
+      // helper
+      rand = (min, max) => Math.random() * (max - min) + min;
+      
+      // params to play with
+      const confettiParams = {
+          // number of confetti per "explosion"
+          number: 20,
+          // min and max size for each rectangle
+          size: { x: [5, 20], y: [10, 18] },
+          // power of explosion
+          initSpeed: 45,
+          // defines how fast particles go down after blast-off
+          gravity: 0.45,
+          // how wide is explosion
+          drag: 0.05,
+          // how slow particles are falling
+          terminalVelocity: 6,
+          // how fast particles are rotating around themselves
+          flipSpeed: 0.017,
+      };
+      const colors = [
+          { front : '#3B870A', back: '#235106' },
+          { front : '#B96300', back: '#6f3b00' },
+          { front : '#E23D34', back: '#88251f' },
+          { front : '#CD3168', back: '#7b1d3e' },
+          { front : '#664E8B', back: '#3d2f53' },
+          { front : '#394F78', back: '#222f48' },
+          { front : '#008A8A', back: '#005353' },
+      ];
+      
+      setupCanvas();
+      updateConfetti();
+      
+      confetti.addEventListener('click', addConfetti);
+      window.addEventListener('resize', () => {
+          setupCanvas();
+          hideConfetti();
+      });
+      
+      // Confetti constructor
+      function Conf() {
+          this.randomModifier = rand(-1, 1);
+          this.colorPair = colors[Math.floor(rand(0, colors.length))];
+          this.dimensions = {
+              x: rand(confettiParams.size.x[0], confettiParams.size.x[1]),
+              y: rand(confettiParams.size.y[0], confettiParams.size.y[1]),
+          };
+          this.position = {
+              x: clickPosition[0],
+              y: clickPosition[1]
+          };
+          this.rotation = rand(0, 2 * Math.PI);
+          this.scale = { x: 1, y: 1 };
+          this.velocity = {
+              x: rand(-confettiParams.initSpeed, confettiParams.initSpeed) * 0.4,
+              y: rand(-confettiParams.initSpeed, confettiParams.initSpeed)
+          };
+          this.flipSpeed = rand(0.2, 1.5) * confettiParams.flipSpeed;
+      
+          if (this.position.y <= container.h) {
+              this.velocity.y = -Math.abs(this.velocity.y);
+          }
+      
+          this.terminalVelocity = rand(1, 1.5) * confettiParams.terminalVelocity;
+      
+          this.update = function () {
+              this.velocity.x *= 0.98;
+              this.position.x += this.velocity.x;
+      
+              this.velocity.y += (this.randomModifier * confettiParams.drag);
+              this.velocity.y += confettiParams.gravity;
+              this.velocity.y = Math.min(this.velocity.y, this.terminalVelocity);
+              this.position.y += this.velocity.y;
+      
+              this.scale.y = Math.cos((this.position.y + this.randomModifier) * this.flipSpeed);
+              this.color = this.scale.y > 0 ? this.colorPair.front : this.colorPair.back;
+          }
+      }
+      
+      function updateConfetti () {
+          confettiCtx.clearRect(0, 0, container.w, container.h);
+      
+          confettiElements.forEach((c) => {
+              c.update();
+              confettiCtx.translate(c.position.x, c.position.y);
+              confettiCtx.rotate(c.rotation);
+              const width = (c.dimensions.x * c.scale.x);
+              const height = (c.dimensions.y * c.scale.y);
+              confettiCtx.fillStyle = c.color;
+              confettiCtx.fillRect(-0.5 * width, -0.5 * height, width, height);
+              confettiCtx.setTransform(1, 0, 0, 1, 0, 0)
+          });
+      
+          confettiElements.forEach((c, idx) => {
+              if (c.position.y > container.h ||
+                  c.position.x < -0.5 * container.x ||
+                  c.position.x > 1.5 * container.x) {
+                  confettiElements.splice(idx, 1)
+              }
+          });
+          window.requestAnimationFrame(updateConfetti);
+      }
+      
+      function setupCanvas() {
+          container = {
+              w: confetti.clientWidth,
+              h: confetti.clientHeight
+          };
+          confetti.width = container.w;
+          confetti.height = container.h;
+      }
+      
+      function addConfetti(e) {
+          const canvasBox = confetti.getBoundingClientRect();
+          if (e) {
+              clickPosition = [
+                  e.clientX - canvasBox.left,
+                  e.clientY - canvasBox.top
+              ];
+          } else {
+              clickPosition = [
+                  canvasBox.width * Math.random(),
+                  canvasBox.height * Math.random()
+              ];
+          }
+          for (let i = 0; i < confettiParams.number; i++) {
+              confettiElements.push(new Conf())
+          }
+      }
+      
+      function hideConfetti() {
+          confettiElements = [];
+          window.cancelAnimationFrame(updateConfetti)
+      }
+      
+      confettiLoop();
+      function confettiLoop() {
+          addConfetti();
+          setTimeout(confettiLoop, 700 + Math.random() * 1700);
+      }
+      
+      </script> -->
+
+    <!-- <script src="js/confetti.min.js"></script> -->
+    <!-- <script>
+      confetti.start();
+    </script> -->
+    <script >
+      
+// // const button = document.getElementById("runaway-btn");
+
+// const animateMove = (element, prop, pixels) =>
+//   anime({
+//     targets: element,
+//     [prop]: `${pixels}px`,
+//     easing: "easeOutCirc"
+//   });
+
+// ["mouseover", "click"].forEach(function (el) {
+//   button.addEventListener(el, function (event) {
+//     const top = getRandomNumber(window.innerHeight - this.offsetHeight);
+//     const left = getRandomNumber(window.innerWidth - this.offsetWidth);
+
+//     animateMove(this, "left", left).play();
+//     animateMove(this, "top", top).play();
+//   });
+// });
+
+// const getRandomNumber = (num) => {
+//   return Math.floor(Math.random() * (num + 1));
+// };
+// yaay = ()=>{
+// console.log('Yaaay you have caught up to me ')
+
+// }
+// var audio = document.getElementById("myAudio");
+// audio.loop = true;
+
+// function startAudio(){
+//   console.log('Hello')
+//   var audio = document.getElementById("myAudio");
+//   audio.play();
+// }
+// 
+
+
+
+
+
+
+const balloonContainer = document.getElementById("balloon-container");
+
+function random(num) {
+  return Math.floor(Math.random() * num);
+}
+
+function getRandomStyles() {
+  var r = random(255);
+  var g = random(255);
+  var b = random(255);
+  var mt = random(200);
+  var ml = random(50);
+  var dur = random(5) + 5;
+  return `
+  background-color: rgba(${r},${g},${b},0.7);
+  color: rgba(${r},${g},${b},0.7); 
+  box-shadow: inset -7px -3px 10px rgba(${r - 10},${g - 10},${b - 10},0.7);
+  margin: ${mt}px 0 0 ${ml}px;
+  animation: float ${dur}s ease-in infinite
+  `;
+}
+
+function createBalloons(num) {
+  for (var i = num; i > 0; i--) {
+    var balloon = document.createElement("div");
+    balloon.className = "balloon";
+    balloon.style.cssText = getRandomStyles();
+    balloonContainer.append(balloon);
+  }
+}
+
+function removeBalloons() {
+  balloonContainer.style.opacity = 0;
+  setTimeout(() => {
+    balloonContainer.remove()
+  }, 1500)
+}
+
+window.addEventListener("load", () => {
+  createBalloons(70)
+  confetti.start(13000,300)
+  var element = document.getElementById('main-banner');
+  element.style.opacity = 0;
+  setTimeout(() => {
+    removeBalloons();
+    setTimeout(()=>{
+      element.style.transition = "opacity 2s ease-in-out";  //Add a transition for smooth fade-in
+      element.style.opacity = 1;  //Trigger the fade-in animation
+    },1000)
+  }, 10000);
+});
+
+window.addEventListener("click", () => {
+  // removeBalloons();
+  
+  setTimeout(()=>{
+    // element.style.display="block";
+  },1000)
+  
+});
+
+// 
+
+
+//  confetti
+
+var candles = document.querySelector(".candles");
+
+  candles.addEventListener("click", function() {
+    stopFlameAnimation(".flame");
+    stopFlameAnimation(".flame2");
+    stopFlameAnimation(".flame3");
+
+    confetti.start(5000,200)
+    let wish= document.querySelector(".make-wish");
+    wish.style.transition = "opacity 2s ease-in-out";
+    wish.style.opacity = 0;
+    let wish2 = document.querySelector(".make-wish2");
+    wish2.style.transition = "opacity 2s ease-in-out";
+    wish2.style.opacity = 100;
+    
+    animateElement(".flame", {"opacity": 0}, 1000);
+    animateElement(".flame2", {"opacity": 0}, 1000);
+    animateElement(".flame3", {"opacity": 0}, 1000);
+
+    // Additional animations or actions can be added here
+  });
+
+  function animateElement(selector, properties, duration) {
+    var elements = document.querySelectorAll(selector);
+
+    elements.forEach(function(element) {
+      element.animate(properties, { duration: duration, easing: "ease-out" });
+    });
+  }
+
+
+  function stopFlameAnimation(selector) {
+    var elements = document.querySelectorAll(selector);
+   
+   setTimeout(()=>{ elements.forEach(function(flame) {
+      flame.style.display = 'none';
+    })},1000)
+   
+
+  }
+    </script>
+    <!-- <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script> -->
+    <script>
+var confetti={maxCount:150,speed:2,frameInterval:15,alpha:1,gradient:!1,start:null,stop:null,toggle:null,pause:null,resume:null,togglePause:null,remove:null,isPaused:null,isRunning:null};!function(){confetti.start=s,confetti.stop=w,confetti.toggle=function(){e?w():s()},confetti.pause=u,confetti.resume=m,confetti.togglePause=function(){i?m():u()},confetti.isPaused=function(){return i},confetti.remove=function(){stop(),i=!1,a=[]},confetti.isRunning=function(){return e};var t=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame,n=["rgba(30,144,255,","rgba(107,142,35,","rgba(255,215,0,","rgba(255,192,203,","rgba(106,90,205,","rgba(173,216,230,","rgba(238,130,238,","rgba(152,251,152,","rgba(70,130,180,","rgba(244,164,96,","rgba(210,105,30,","rgba(220,20,60,"],e=!1,i=!1,o=Date.now(),a=[],r=0,l=null;function d(t,e,i){return t.color=n[Math.random()*n.length|0]+(confetti.alpha+")"),t.color2=n[Math.random()*n.length|0]+(confetti.alpha+")"),t.x=Math.random()*e,t.y=Math.random()*i-i,t.diameter=10*Math.random()+5,t.tilt=10*Math.random()-10,t.tiltAngleIncrement=.07*Math.random()+.05,t.tiltAngle=Math.random()*Math.PI,t}function u(){i=!0}function m(){i=!1,c()}function c(){if(!i)if(0===a.length)l.clearRect(0,0,window.innerWidth,window.innerHeight),null;else{var n=Date.now(),u=n-o;(!t||u>confetti.frameInterval)&&(l.clearRect(0,0,window.innerWidth,window.innerHeight),function(){var t,n=window.innerWidth,i=window.innerHeight;r+=.01;for(var o=0;o<a.length;o++)t=a[o],!e&&t.y<-15?t.y=i+100:(t.tiltAngle+=t.tiltAngleIncrement,t.x+=Math.sin(r)-.5,t.y+=.5*(Math.cos(r)+t.diameter+confetti.speed),t.tilt=15*Math.sin(t.tiltAngle)),(t.x>n+20||t.x<-20||t.y>i)&&(e&&a.length<=confetti.maxCount?d(t,n,i):(a.splice(o,1),o--))}(),function(t){for(var n,e,i,o,r=0;r<a.length;r++){if(n=a[r],t.beginPath(),t.lineWidth=n.diameter,i=n.x+n.tilt,e=i+n.diameter/2,o=n.y+n.tilt+n.diameter/2,confetti.gradient){var l=t.createLinearGradient(e,n.y,i,o);l.addColorStop("0",n.color),l.addColorStop("1.0",n.color2),t.strokeStyle=l}else t.strokeStyle=n.color;t.moveTo(e,n.y),t.lineTo(i,o),t.stroke()}}(l),o=n-u%confetti.frameInterval),requestAnimationFrame(c)}}function s(t,n,o){var r=window.innerWidth,u=window.innerHeight;window.requestAnimationFrame=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(t){return window.setTimeout(t,confetti.frameInterval)};var m=document.getElementById("confetti-canvas");null===m?((m=document.createElement("canvas")).setAttribute("id","confetti-canvas"),m.setAttribute("style","display:block;z-index:999999;pointer-events:none;position:fixed;top:0"),document.body.prepend(m),m.width=r,m.height=u,window.addEventListener("resize",function(){m.width=window.innerWidth,m.height=window.innerHeight},!0),l=m.getContext("2d")):null===l&&(l=m.getContext("2d"));var s=confetti.maxCount;if(n)if(o)if(n==o)s=a.length+o;else{if(n>o){var f=n;n=o,o=f}s=a.length+(Math.random()*(o-n)+n|0)}else s=a.length+n;else o&&(s=a.length+o);for(;a.length<s;)a.push(d({},r,u));e=!0,i=!1,c(),t&&window.setTimeout(w,t)}function w(){e=!1}}();
+
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
